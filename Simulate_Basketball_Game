@@ -1,0 +1,291 @@
+/* Duy ANh Nguyen
+Jan. 23
+Basket_simulator
+This program was written to similate 2 team play and the score is random. There is 2 option, (S)coreboard and (P)lay-by-play. (S) run score game while (P)
+each team take turn to score.
+Process:
+- Get user choice (S)coreboard or (P)lay by play
+- (S)coreboard
++ Print scoreboard
++ Change the score as each team score
+- (P)play by play
++ Take turn play
++ Add score each team
++ Print on scoreboard
+*/
+
+#include <iostream>
+#include <time.h>
+#include <string>
+#include <Windows.h>
+#include <conio.h>
+#include "colour.h"
+using namespace std;
+
+// I do not like global warming so let keep all the program local
+
+// Function Prototype
+void seed_random();                              // Seed random generator
+void score_board();                              // User choice (S)coreboard
+void play_by_play();                             // User choice (P)lay-by-play
+void player(int x);                              // Name of player on each team
+void print_result(int team1, int team2);         // Print the final result and the team that win
+
+												 // Main program
+int main()
+{
+	// Local identifier dictionary
+	char user_choice;               // User type of game choice (S)coreboard or (P)lay-by-play
+
+									// Seed random generator
+	seed_random();
+
+	/* Program */
+	// Get input - Game choice
+	text_colour(f_green, b_black); // Colour
+	cout << "What type of game do you want:" << endl;
+	cout << "(S)coreboard only or (P)lay-by-play... (S/P) ";
+	user_choice = toupper(_getch());
+	cout << user_choice << endl;
+
+	// Check input - Choice
+	while (user_choice != 'S' && user_choice != 'P')
+	{
+		text_colour(f_red, b_black); // Colour
+		cout << "INVALID CHOICE!" << endl;
+		text_colour(f_dred, b_black); // Colour
+		cout << "What type of game do you want:" << endl;
+		cout << "(S)coreboard only or (P)lay-by-play... (S/P) ";
+		user_choice = toupper(_getch());
+		cout << user_choice << endl;
+	} // WHile
+
+	  // Run user choice - Function
+	switch (user_choice)
+	{
+	case 'S': score_board(); break;
+	case 'P': play_by_play(); break;
+	} // Switch
+
+	  // Reset colour
+	text_colour(f_gray, b_black);
+	return 0;
+} // Main
+
+  // seed_random() - Function that seed random number
+void seed_random()
+{
+	int i;               // Seed random generator
+
+						 // Seed the random number generator use the timer
+	srand((unsigned)time(NULL));
+	for (i = 0; i<rand(); i++)
+		rand();
+} // seed_random()
+
+  // score_board() - Function that run user choice (Scoreboard)
+void score_board()
+{
+	// Local variable dictionary
+	int count_round;                               // Number of rounds
+	int counter_match;                             // Number of matches
+	int random_score_t1, random_score_t2;          // Random score for team 1 and 2
+	int t1_total = 0, t2_total = 0;                // Total score for team 1 and 2
+	int rand_time_delay = 0;                       // Time delay to similator the time take to score
+
+												   // Loop - score and print board
+	for (count_round = 1; count_round <= 4; count_round++)
+	{
+		// Loop - Match
+		for (counter_match = 1; counter_match <= 15; counter_match++)
+		{
+			// Random score
+			random_score_t1 = rand() % 4;
+			random_score_t2 = rand() % 4;
+			// Update total score
+			t1_total += random_score_t1;
+			t2_total += random_score_t2;
+
+			// Clear screen
+			system("cls");
+
+			// Print round
+			text_colour(f_green, b_black); // Colour
+			cout << "Quarter #" << count_round << ":" << endl;
+			// Print score board
+			cout << "====================" << endl;
+			cout << "Team #1: " << t1_total << endl;
+			cout << "Team #2: " << t2_total << endl;
+			cout << "====================" << endl;
+
+			// Time delay
+			rand_time_delay = rand() % 1500 + 500;
+			Sleep(rand_time_delay);
+		} // For
+	} // For
+
+	  // Print result
+	print_result(t1_total, t2_total);
+} // score_board()
+
+  /* In case you want the other way, the loop would look like this:
+  for (counter_match = 1; counter_match <= 15; counter_match++)
+  {
+  // Random score
+  random_score_t1 = rand() % 4;
+  random_score_t2 = rand() % 4;
+  // Update total score
+  t1_total += random_score_t1;
+  t2_total += random_score_t2;
+
+  // Clear screen
+  system("cls");
+
+  // Print round
+  text_colour(f_green, b_black); // Colour
+  cout << "Quarter #" << count_round << ":" << endl;
+  // Print score board
+  cout << "====================" << endl;
+  cout << "Team #1: " << t1_total << endl;
+  cout << "Team #2: " << t2_total << endl;
+  cout << "====================" << endl;
+
+  // Continue similator
+  cout << "Please press any key to continue... ";
+  _getch()
+  } // For
+  */
+
+  // play_by_play() - Function that run user choice (Play-by-play)
+void play_by_play()
+{
+	// Local variable dictionary
+	string team1, team2;                     // Team name
+	int t1_total = 0, t2_total = 0;          // Total point for both team 1 and 2
+
+											 // Get input - Team's name
+	text_colour(f_white, b_black); // Colour
+	cout << "What is team 1 name? ";
+	cin >> team1;
+	cout << "What is team 2 name? ";
+	cin >> team2;
+
+	// Variable for loop rounds and matches
+	int count_round;               // Counter for rounds
+	int counter_match;             // COuner for matches
+
+								   // Loop - Round
+	for (count_round = 1; count_round <= 4; count_round++)
+	{
+		// Local variable dictionary
+		int random_score_t1, random_score_t2;          // Random score for both team 1 and 2
+		int player_t1, player_t2;                      // Random players for both team 1 and 2
+
+													   // Loop - Match
+		for (counter_match = 1; counter_match <= 15; counter_match++)
+		{
+			system("cls");     // Clear screen
+
+							   // Random score and player
+			random_score_t1 = rand() % 4;
+			random_score_t2 = rand() % 4;
+			player_t1 = rand() % 5 + 1;
+			player_t2 = rand() % 5 + 6;
+			// Update total score
+			t1_total += random_score_t1;
+			t2_total += random_score_t2;
+
+			// Print round
+			text_colour(f_green, b_black); // Colour
+			cout << "Quarter #" << count_round << ":" << endl;
+			// Team 1
+			cout << team1 << ":" << endl;
+			player(player_t1);
+			cout << " score - " << random_score_t1 << endl;
+			// Team 2
+			cout << team2 << ":" << endl;
+			player(player_t2);
+			cout << " score - " << random_score_t2 << endl;
+
+			// Comnitue simulator
+			text_colour(f_white, b_black); // Colour
+			cout << "Press any key to continue . . . ";
+			_getch();
+
+			// Print scoreboard
+			// Clear screen
+			system("cls");
+
+			// Print round
+			text_colour(f_green, b_black); // Colour
+			cout << "Current score is:" << endl;
+			// Print score board
+			cout << "====================" << endl;
+			cout << "Team #1: " << t1_total << endl;
+			cout << "Team #2: " << t2_total << endl;
+			cout << "====================" << endl;
+
+			// Comnitue simulator
+			text_colour(f_white, b_black); // Colour
+			cout << "Press any key to continue . . . ";
+			_getch();
+		}
+	} // For
+	cout << endl; // Space
+
+				  // Print result
+	print_result(t1_total, t2_total);
+} // play_by_play()
+
+  // player() - Function print name of player in each team
+void player(int x)
+{
+	string t1, t2, t3, t4, t5;          // Team 1 player's name
+	string n1, n2, n3, n4, n5;          // Team 2 player's name
+
+										// Player name
+										// Team 1
+	t1 = "Scott Robert";
+	t2 = "Mega Byte";
+	t3 = "Anti-Adware";
+	t4 = "Motherboard";
+	t5 = "Security";
+	// Team 2
+	n1 = "Bot";
+	n2 = "Mega Bot";
+	n3 = "Supper Bot";
+	n4 = "Coppyright";
+	n5 = "Card of Destiny";
+
+	// Print player
+	switch (x)
+	{
+		// Team 1
+	case 1: cout << t1; break;
+	case 2: cout << t2; break;
+	case 3: cout << t3; break;
+	case 4: cout << t4; break;
+	case 5: cout << t5; break;
+		// Team 2
+	case 6: cout << n1; break;
+	case 7: cout << n2; break;
+	case 8: cout << n3; break;
+	case 9: cout << n4; break;
+	case 10: cout << n5; break;
+	} // Switch
+} // player()
+
+  // print_result() - Function that print the final result of who win
+void print_result(int t1_total, int t2_total)
+{
+	// Print result
+	text_colour(f_green, b_black); // Colour
+	cout << "So... Team 1 score " << t1_total << " and Team 2 score " << t2_total << endl;
+	// Winner
+	if (t1_total > t2_total)
+		cout << "Team 1 win " << t1_total << " - " << t2_total << endl; // If
+	else if (t1_total < t2_total)
+		cout << "Team 2 win " << t2_total << " - " << t1_total << endl; // ELse if
+	else
+		cout << "Both team have the same score so... No team win " << t1_total << " - " << t2_total << endl; // Else
+} // print_result()
