@@ -1,0 +1,147 @@
+/* Duy Anh Nguyen
+Jan. 19
+EX_B_OWSHEET
+This program help to keep track of score in a game known as bowling that why we call this program... HINT, HINT, HINT! This act like a sheet of paper that 
+instead of you write in, the computer going to do it for you so we call this program BOWSHEET take from the famous make up term called "BOOLSHEET".
+Process:
+- Get team name
+- Get amount of players
+- Find average
+- Print winner
+*/
+
+#include <iostream>
+#include <time.h>
+#include <Windows.h>
+#include <string>
+#include <iomanip>
+#include "colour.h"
+using namespace std;
+
+// I do not like global warming so let keep all the program local
+
+// Function prototypes
+int team_num_player(string team);               // Get number of players
+float g_score_aver(int team_player);            // Funcion get team score and calculate average
+
+// Main program
+int main()
+{
+	// Local variable dictionary
+	string name_t1, name_t2;               // Team's name
+	int t1_player, t2_player;              // Number of players on each team
+	float t1_aver, t2_aver;                // Average of each team
+
+	/* Program */
+	// Get info of 2 team - name
+	cout << "What is the first team name? ";
+	cin >> name_t1;
+	cout << "What is the second team name? ";
+	cin >> name_t2;
+
+	// Get number of players on team 1
+	t1_player = team_num_player(name_t1);     // Number of players - team 1
+	// Get score and average
+	t1_aver = g_score_aver(t1_player);     // Average score of team 1
+
+	// Get number of players on team 2
+	t2_player = team_num_player(name_t2);     // Number of players - team 2
+	// Get score and average
+	t2_aver = g_score_aver(t2_player);     // Average score of team 2
+
+	// Pre-fixed decimal place - Average
+	cout << fixed << setprecision(2);
+
+	// Print result
+	text_colour(f_dyellow, b_black); // Colour
+	cout << "On average, team " << name_t1 << " score " << t1_aver << " and team " << name_t2 << " score " << t2_aver << endl;
+	cout << "So... ";
+
+	// Check and print winner
+	if (t1_aver > t2_aver)
+		cout << name_t1 << " wins, " << t1_aver << " to " << t2_aver << endl;     // If
+	else if (t1_aver < t2_aver)
+		cout << name_t2 << " wins, " << t2_aver << " to " << t1_aver << endl;     // Else if
+	else
+		cout << "No team win since they tie! " << t1_aver << " to " << t2_aver << endl;     // Else
+
+	// Return colour
+	text_colour(f_gray, b_black);
+	return 0;
+} // Main
+
+// team_num_player() - Function get number of players
+int team_num_player(string team)
+{
+	// Local variable dictionary
+	int players;               // Number of players
+
+	// Get info - Number of players
+	text_colour(f_green, b_black); // Colour
+	cout << "Team '" << team << "':" << endl;
+	cout << "Number of bowlers on this team: ";
+	text_colour(f_white, b_black); // Colour
+	cin >> players;
+
+	// Ensure input
+	while (cin.fail() || players <= 0)
+	{
+		if (cin.fail())
+			cin.clear();     // Clean error
+		cin.ignore(255, '\n');     // Clear remainder of input line
+
+		// Re-enter input
+		text_colour(f_red, b_black); // Colour
+		cout << "INVALID VALUE!" << endl;
+		text_colour(f_dred, b_black); // olour
+		cout << "Number of bowlers on this team: ";
+		text_colour(f_white, b_black); // Colour
+		cin >> players;
+	} // While
+	cin.ignore(255, '\n');     // Clean remainder of input line
+
+	// Return - Number of bowlers
+	return players;
+} // team_num_player()
+
+// g_score_aver() - Function that get team score and calculate average
+float g_score_aver(int team_player)
+{
+	// Local variable dictionary
+	int count;               // Counter for loop
+	int score;               // Player's score
+	int total = 0;           // Total score
+
+	// Get score and average
+	for (count = 1; count <= team_player; count++)
+	{
+		// Get score
+		text_colour(f_dgreen, b_black); // Colour
+		cout << "Enter the score of bowler #" << count << ": ";
+		text_colour(f_white, b_black); // Colour
+		cin >> score;
+		
+		// Check input - Score
+		while (cin.fail() || score <= 0)
+		{
+			if (cin.fail())
+				cin.clear();     // Clean error
+			cin.ignore(255, '\n');     // Clean remainder of input line
+
+			// Re-enter input
+			text_colour(f_red, b_black); // Colour
+			cout << "INVALID VALUE!" << endl;
+			text_colour(f_dred, b_black); // Colour
+			cout << "Enter the score of bowler #" << count << ": ";
+			text_colour(f_white, b_black); // Colour
+			cin >> score;
+		} // While
+		cin.ignore(255, '\n');     // Clean remainder of input line
+
+		// Update - Total
+		total += score;
+	} // For
+
+	// Return - Average
+	return static_cast<float>(total) / team_player;
+} // g_score_aver()
