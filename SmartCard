@@ -1,0 +1,285 @@
+/* Duy Anh Nguyen
+Jan. 23
+Smart_Card
+This program was written to follow the Dakota Dream (Not the American Dream because Trump take care of it are ready). You know it! It's the 'HaperTime Donation' and there for we open a casino to support it.
+Please... Please... DO NOT! Get broke...
+Process:
+- Generate random money
+- Ask for bet
+- Give user 2 start card
+- User option to (H)it or (S)tay
+- Check result
+- If user win, win bet. If lose, lose bet.
+*/
+
+// I do not like global warming so let keep all the program local
+
+#include <iostream>
+#include <string>
+#include <conio.h>
+#include <time.h>
+#include <Windows.h>
+#include "colour.h"
+using namespace std;
+
+// Function prototype
+void seed_random();                               // Seed random generator for random number
+int print_card(int total_num, int card);          // Print card out look
+int start_card();                                 // User and dealer get 2 start card
+int get_card();                                   // User and dealer option to (H)it
+
+// Main program
+int main()
+{
+	// Local variable dictionary
+	char choice;               // User choice - (H)it, (S)tay, (Y) for play again
+	int money = 0;             // User money
+	int bet;                   // User bet
+	int total_user_num;        // User total card's number
+	int total_dealer_num;      // Dealer total card's number
+
+	// Random generator
+	seed_random();
+
+	// Random amounts of money - $1 to $1000
+	money = rand() % 1000 + 1;
+
+	/* Program */
+	do
+	{
+		// Reset variable
+		total_user_num = 0;
+		total_dealer_num = 0;
+
+		// Take input - bet
+		text_colour(f_white, b_black); // Colour
+		cout << "Your current money is $" << money << endl;
+		cout << "How much do you want to bet? $";
+		text_colour(f_green, b_black); // Colour
+		cin >> bet;
+		// Check input - Bet
+		while (cin.fail() || bet > money || bet < 1)
+		{
+			if (cin.fail())
+				cin.clear(); // Clear error
+			cin.ignore(255, '\n'); // Clean out remainder of input line
+
+			// Re-enter - bet
+			text_colour(f_red, b_black); // Colour
+			cout << "INVALID BET!" << endl;
+			text_colour(f_dred, b_black); // Colour
+			cout << "How much do you want to bet? $";
+			text_colour(f_white, b_black); // Colour
+			cin >> bet;
+		} // While
+		cin.ignore(255, '\n'); // Clean out remainder of input line
+
+		// Print 2 starting card
+		text_colour(f_white, b_black); // Colour
+		cout << "Your card are:" << endl;
+		// 2 start cards
+		total_user_num += start_card();
+
+		// (H)it or (S)tay
+		do
+		{
+			// Print out user card info and ask if they want to (H)it or (S)tay
+			cout << "You have " << total_user_num << ". Do you want to (H)it or (S)tay... ";
+			choice = toupper(_getch());
+			cout << choice << endl;
+
+			// Check input - Choice
+			while (choice != 'H' && choice != 'S')
+			{
+				text_colour(f_red, b_black); // Colour
+				cout << "INVALID CHOICE!" << endl;
+				text_colour(f_dred, b_black); // Colour
+				cout << "Do you want to(H)it or (S)tay... ";
+				choice = toupper(_getch());
+				text_colour(f_white, b_black); // Colour
+				cout << choice << endl;
+			} // While
+
+			// User (H)it option
+			if (choice == 'H')
+				total_user_num += get_card();
+		} while (total_user_num <= 21 && choice == 'H');
+
+		// Check user card's number <= 21
+		if (total_user_num > 21)
+		{
+			money -= bet;
+			text_colour(f_red, b_black); // Colour
+			cout << "You bust with " << total_user_num << " - You lose $" << bet << " and now have $" << money << endl;
+		} // If
+
+		// Computer turn to pick card
+		else
+		{
+			cout << "Dealer's card are:" << endl;
+			total_dealer_num += start_card();
+
+			// Try to win user
+			while (total_dealer_num < total_user_num)
+				total_dealer_num += get_card(); // While
+
+			// Check result
+			if (total_dealer_num > 21)
+			{
+				money += bet;
+				text_colour(f_green, b_black); // Colour
+				cout << "Dealer bust with " << total_dealer_num << " - You win $" << bet << " and now have $" << money << endl;
+			} // If
+			else if (total_dealer_num >= total_user_num)
+			{
+				money -= bet;
+				text_colour(f_red, b_black); // Colour
+				cout << "Dealer have " << total_dealer_num << " - You lose $" << bet << " and now have $" << money << endl;
+			} // Else if
+			else
+			{
+				money += bet;
+				text_colour(f_green, b_black); // Colour
+				cout << "Dealer have " << total_dealer_num << " - You win $" << bet << " and now have $" << money << endl;
+			}// Else
+		} // Else
+
+		// Check money to play again
+		if (money == 0)
+		{
+			text_colour(f_red, b_black); // Colour
+			cout << "You run out of money! BYE BYE..." << endl;
+			choice = 'N';
+		} // If
+		else
+		{
+			text_colour(f_yellow, b_black); // Colour
+			cout << "Do you want to play again? ";
+			choice = toupper(_getch());
+			cout << choice << endl;
+
+			// Check input - Choice
+			while (choice != 'Y' && choice != 'N')
+			{
+				cout << "INVALID CHOICE!" << endl;
+				cout << "Do you want to play again? ";
+				choice = toupper(_getch());
+				cout << choice << endl;
+				system("cls");
+			} // While
+			system("cls");
+		} // Else
+	} while (choice == 'Y');
+
+	// Reset colour
+	text_colour(f_gray, b_black);
+	return 0;
+} // Main
+
+// seed_random() - Function that seed random generator
+void seed_random()
+{
+	int i;               // Seed random generator
+
+	// Seed the random number generator use the timer
+	srand((unsigned)time(NULL));
+	for (i = 0; i<rand(); i++)
+		rand();
+} // seed_random()
+
+// start_card() - Function that get random 2 start card
+int start_card()
+{
+	// Local variable dictionary
+	int random_card;               // Get random card's number
+	int total = 0;                 // Total card's number
+	int count;                     // Counter for loop
+
+	// Loop 2 time
+	for (count = 1; count <= 2;count++)
+	{
+		// Get random card
+		random_card = rand() % 13 + 2;
+		// Print card and get total card's number
+		total = print_card(total, random_card);
+	} // For
+
+	// Return - Total card's number
+	return total;
+} // start_card()
+
+// get_card() - Function that get optional (H)it card
+int get_card()
+{
+	// Local variable dictionary
+	int random_card;               // Get random card's number
+	int total = 0;                 // Toal card's number
+
+	// Get random card
+	random_card = rand() % 13 + 2;
+	// Print card and get total card's number
+	total = print_card(total, random_card);
+
+	// Return - Total card's number
+	return total;
+} // get_card()
+
+// print_card() - Function print card out look
+int print_card(int total, int card)
+{
+	// Local variable dictionary
+	int suit;               // Number of the suit
+	string print_card;      // Card face look (Card that are above 10)
+
+	// Random car and suit
+	suit = rand() % 4 + 3;
+
+	// Check right colour
+	if (suit <= 4)
+		text_colour(f_red, b_white);
+	else
+		text_colour(f_black, b_white);
+
+	// For number that >= 10
+	switch (card)
+	{
+	case 1: print_card = "1"; break;
+	case 2: print_card = "2"; break;
+	case 3: print_card = "3"; break;
+	case 4: print_card = "4"; break;
+	case 5: print_card = "5"; break;
+	case 6: print_card = "6"; break;
+	case 7: print_card = "7"; break;
+	case 8: print_card = "8"; break;
+	case 9: print_card = "9"; break;
+	case 10: print_card = "T"; break;
+	case 11: print_card = "J"; break;
+	case 12: print_card = "Q"; break;
+	case 13: print_card = "K"; break;
+	case 14: print_card = "A"; break;
+	} // Switch
+
+	  // Transfer card's number
+	switch (card)
+	{
+	case 11: card = 10; break;
+	case 12: card = 10; break;
+	case 13: card = 10; break;
+	case 14: card = 11; break;
+	} // Switch
+
+	// Add the number card
+	total += card;
+
+	// Print card
+	cout << "=====" << endl;
+	cout << "|" << print_card << " " << (char)suit << "|" << endl;
+	cout << "|   |" << endl;
+	cout << "|" << (char)suit << " " << print_card << "|" << endl;
+	cout << "=====" << endl;
+
+	// Return colour
+	text_colour(f_white, b_black);
+
+	return total;
+} // print_card()
