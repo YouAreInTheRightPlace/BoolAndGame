@@ -1,0 +1,113 @@
+/* Duy Anh Nguyen
+Jan. 25
+Rand_card
+This program print three cards and let the user deal with it and HOPEFULLY... HOPEFULLY THEY DON'T GET ARREST.
+Process:
+- Print message
+- Print 3 cards
+- End program
+*/
+
+#include <iostream>
+#include <string>
+#include <time.h>
+#include <Windows.h>
+#include "colours.h"
+using namespace std;
+
+// I do not like global warming so let keep all the program local
+
+// Function prototype
+void seed_random();               // Seed random generator
+void three_card();                // Get three random card
+void print_card(int card);        // Print out look of the card
+
+// Main program
+int main()
+{
+	// Random gengerator
+	seed_random();
+
+	/* Program */
+	// Message to user
+	cout << "Here the card! Deal with it and PLEASE, PLEASE... DO NOT GET ARRESTED!" << endl;
+
+	// Print 4 card
+	three_card();
+
+	// Return colour
+	text_colour(f_gray, b_black);
+	return 0;
+} // Main
+
+// seed_random() - Function that generate random number
+void seed_random()
+{
+	int i;               // Seed random generator
+
+	// Seed the random number generator use the timer
+	srand((unsigned)time(NULL));
+	for (i = 0; i<rand(); i++)
+		rand();
+} // seed_random()
+
+// three_card() - Function that print three cards
+void three_card()
+{
+	// Local variable dictionary
+	int count;               // Counter for loop
+	int rand_card;           // Random number for card's number
+
+	// Get three card
+	for (count = 1; count <= 3; count++)     // Loop three time
+	{
+		rand_card = rand() % 13 + 2;     // Get random card
+		print_card(rand_card);     // Print the random card
+	} // For
+} // three_card()
+
+// print_card() - FUnction that print the random card with colour
+void print_card(int card)
+{
+	// Local variable dictionary
+	int suit;                // Number of the suit
+	string print_card;       // Card face look (Card that are above 10)
+
+	// Get random suit
+	suit = rand() % 4 + 3;
+
+	// Check suit for the right colour
+	if (suit <= 4)
+		text_colour(f_red, b_white);
+	else
+		text_colour(f_black, b_white);
+
+	// Get the right card symbol
+	switch (card)
+	{
+	case 1: print_card = "1"; break;
+	case 2: print_card = "2"; break;
+	case 3: print_card = "3"; break;
+	case 4: print_card = "4"; break;
+	case 5: print_card = "5"; break;
+	case 6: print_card = "6"; break;
+	case 7: print_card = "7"; break;
+	case 8: print_card = "8"; break;
+	case 9: print_card = "9"; break;
+	case 10: print_card = "T"; break;
+	case 11: print_card = "J"; break;
+	case 12: print_card = "Q"; break;
+	case 13: print_card = "K"; break;
+	case 14: print_card = "A"; break;
+	} // Switch
+
+	// Print card
+	cout << "=====" << endl;
+	cout << "|" << print_card << " " << (char)suit << "|" << endl;
+	cout << "|   |" << endl;
+	cout << "|" << (char)suit << " " << print_card << "|" << endl;
+	cout << "=====" << endl;
+
+	// Return colour
+	text_colour(f_white, b_black);
+} // print_card()
